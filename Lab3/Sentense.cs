@@ -33,14 +33,19 @@ namespace TextTokenizationLab
         public override string ToString()
         {
             var result = new System.Text.StringBuilder();
+            string previous = "";
             for (int i = 0; i < Tokens.Count; i++)
             {
-                var current = Tokens[i];
-                if (i > 0 && current is Word && !(Tokens[i - 1] is Punctuation && (Tokens[i - 1].Value == "'" || Tokens[i - 1].Value == "-")))
-                {
-                    result.Append(" ");
-                }
-                result.Append(current.Value);
+                var token = Tokens[i];
+                string value = token.Value;
+                if (string.IsNullOrEmpty(value)) continue;
+                bool closing = token is Punctuation && ".,!?;:)]}".Contains(value);
+                bool previousOpening = "([{".Contains(previous);
+                bool attached = previous == "-" || value == "-" || previous == "'" || value == "'";
+                if (result.Length > 0 && !closing && !previousOpening && !attached)
+                    result.Append(' ');
+                result.Append(value);
+                previous = value;
             }
             return result.ToString();
         }
