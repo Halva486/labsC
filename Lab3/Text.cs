@@ -89,12 +89,8 @@ namespace TextTokenizationLab
 
         public void ExportToXml(string filePath)
         {
-            Console.WriteLine($"\n--- 7. Экспорт в XML: {filePath} ---");
-            XmlSerializer serializer = new XmlSerializer(typeof(Text));
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                serializer.Serialize(writer, this);
-            }
+            XmlExporter.Export(this, filePath);
+            Console.WriteLine($"XML сохранён: {filePath}");
         }
 
         public void PrintText()
