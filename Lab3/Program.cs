@@ -57,31 +57,12 @@ namespace TextTokenizationLab
 
         static HashSet<string> LoadStopWords()
         {
-            HashSet<string> stopWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            string ruFile = "stopwords_ru.txt";
-            string enFile = "stopwords_en.txt";
-
-            if (File.Exists(ruFile))
+            try { return StopWordLoader.LoadDefault(); }
+            catch (IOException ex)
             {
-                foreach (string line in File.ReadAllLines(ruFile))
-                {
-                    string word = line.Trim();
-                    if (!string.IsNullOrEmpty(word)) stopWords.Add(word);
-                }
-                Console.WriteLine("\n[Успех]: Загружены русские стоп-слова.");
+                Console.WriteLine($"Ошибка загрузки стоп-слов: {ex.Message}");
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
-
-            if (File.Exists(enFile))
-            {
-                foreach (string line in File.ReadAllLines(enFile))
-                {
-                    string word = line.Trim();
-                    if (!string.IsNullOrEmpty(word)) stopWords.Add(word);
-                }
-                Console.WriteLine("[Успех]: Загружены английские стоп-слова.");
-            }
-
-            return stopWords;
         }
     }
 }
