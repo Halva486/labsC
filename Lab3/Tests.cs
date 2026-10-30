@@ -11,7 +11,7 @@ namespace TextTokenizationLab
         private static int passed;
         private static int failed;
 
-        public static void RunAll()
+        public static int RunAll()
         {
             passed = 0;
             failed = 0;
@@ -30,9 +30,13 @@ namespace TextTokenizationLab
             Run("6. Удаление стоп-слов", TestRemoveStopWords);
             Run("7. Экспорт в XML", TestXmlExport);
             Run("Вывод текста", TestPrintText);
+            Run("Пустой текст", TestEmptyText);
+            Run("Несколько знаков препинания", TestMultiplePunctuation);
+            Run("Неверный индекс", TestInvalidSentenceIndex);
 
             Console.WriteLine(
                 $"\nИТОГ: успешно {passed}, ошибок {failed}, всего {passed + failed}.");
+            return failed == 0 ? 0 : 1;
         }
 
         private static void Run(string name, Action test)
@@ -289,6 +293,27 @@ namespace TextTokenizationLab
             Check(output.Contains("Hello!") &&
                   output.Contains("How are you?"),
                   "Не все предложения выведены.");
+        }
+        private static void TestEmptyText()
+        {
+            Check(TextParser.Parse(" ").Sentences.Count == 0,
+                "Пустой ввод должен давать ноль предложений.");
+        }
+
+        private static void TestMultiplePunctuation()
+        {
+            Text result = TextParser.Parse("Привет... Как дела?!");
+            Check(result.Sentences.Count == 2, "Нужно два предложения.");
+            Check(result.Sentences[1].ToString() == "Как дела?!",
+                "Не сохранена пунктуация.");
+        }
+
+        private static void TestInvalidSentenceIndex()
+        {
+            bool thrown = false;
+            try { TextParser.Parse("Hello.").ReplaceWordsInSentence(3, 3, "ok"); }
+            catch (ArgumentOutOfRangeException) { thrown = true; }
+            Check(thrown, "Ожидалась ошибка индекса.");
         }
     }
 }

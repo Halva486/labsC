@@ -63,7 +63,7 @@ namespace TextTokenizationLab
             if (wordLength <= 0) throw new ArgumentOutOfRangeException(nameof(wordLength));
             if (string.IsNullOrEmpty(subString)) throw new ArgumentException("Пустая строка замены.", nameof(subString));
             Console.WriteLine($"\n--- 5. Замена в предложении [{sentenceIndex}] слов длины {wordLength} на '{subString}' ---");
-            if (sentenceIndex < 0 || sentenceIndex >= Sentences.Count) return;
+            if (sentenceIndex < 0 || sentenceIndex >= Sentences.Count) throw new ArgumentOutOfRangeException(nameof(sentenceIndex));
 
             var targetSentence = Sentences[sentenceIndex];
             for (int i = 0; i < targetSentence.Tokens.Count; i++)
