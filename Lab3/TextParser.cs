@@ -8,6 +8,7 @@ namespace TextTokenizationLab
         public static Text Parse(string input)
         {
             Text textObj = new Text();
+            if (string.IsNullOrWhiteSpace(input)) return textObj;
 
             var sentenceMatches = Regex.Matches(input, AppConstants.SentenceRegex);
 
@@ -24,7 +25,7 @@ namespace TextTokenizationLab
                 {
                     string tokenValue = tMatch.Value;
 
-                    if (char.IsLetterOrDigit(tokenValue[0]))
+                    if (tMatch.Groups[1].Success)
                     {
                         sentence.Tokens.Add(new Word(tokenValue));
                     }

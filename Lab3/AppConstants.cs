@@ -6,6 +6,6 @@ namespace TextTokenizationLab
 
         public const string SentenceRegex = @"[^.!?]+([.!?]+|\s*$)";
 
-        public const string TokenRegex = @"([a-zA-Z0-9а-яА-ЯёЁ'-]+)|([.!?,-:;\""()])";
+        public const string TokenRegex = @"([a-zA-Z0-9а-яА-ЯёЁ]+(?:['’-][a-zA-Z0-9а-яА-ЯёЁ]+)*)|([^\s])";
     }
 }
