@@ -33,6 +33,7 @@ namespace TextTokenizationLab
 
         public void FindWordsInQuestions(int length)
         {
+            if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
             Console.WriteLine($"\n--- 3. Слова длины {length} в вопросительных предложениях ---");
             var words = Sentences
                 .Where(s => s.IsQuestion)
@@ -47,6 +48,7 @@ namespace TextTokenizationLab
 
         public void RemoveWordsStartingWithConsonant(int length)
         {
+            if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
             Console.WriteLine($"\n--- 4. Удаление слов длины {length}, начинающихся с согласной ---");
             foreach (var s in Sentences)
             {
@@ -57,6 +59,9 @@ namespace TextTokenizationLab
 
         public void ReplaceWordsInSentence(int sentenceIndex, int wordLength, string subString)
         {
+            if (sentenceIndex < 0 || sentenceIndex >= Sentences.Count) throw new ArgumentOutOfRangeException(nameof(sentenceIndex));
+            if (wordLength <= 0) throw new ArgumentOutOfRangeException(nameof(wordLength));
+            if (string.IsNullOrEmpty(subString)) throw new ArgumentException("Пустая строка замены.", nameof(subString));
             Console.WriteLine($"\n--- 5. Замена в предложении [{sentenceIndex}] слов длины {wordLength} на '{subString}' ---");
             if (sentenceIndex < 0 || sentenceIndex >= Sentences.Count) return;
 
@@ -73,6 +78,7 @@ namespace TextTokenizationLab
 
         public void RemoveStopWords(HashSet<string> stopWords)
         {
+            ArgumentNullException.ThrowIfNull(stopWords);
             Console.WriteLine("\n--- 6. Удаление стоп-слов ---");
             foreach (var s in Sentences)
             {
