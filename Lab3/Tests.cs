@@ -11,7 +11,7 @@ namespace TextTokenizationLab
         private static int passed;
         private static int failed;
 
-        public static void RunAll()
+        public static int RunAll()
         {
             passed = 0;
             failed = 0;
@@ -30,9 +30,14 @@ namespace TextTokenizationLab
             Run("6. Удаление стоп-слов", TestRemoveStopWords);
             Run("7. Экспорт в XML", TestXmlExport);
             Run("Вывод текста", TestPrintText);
+            Run("Пустой текст", TestEmptyText);
+            Run("Пунктуация ?!", TestMultiplePunctuation);
+            Run("Проверка индекса", TestBadIndex);
+            Run("Стоп-слова без учёта регистра", TestCaseInsensitiveStopWords);
 
             Console.WriteLine(
                 $"\nИТОГ: успешно {passed}, ошибок {failed}, всего {passed + failed}.");
+            return failed == 0 ? 0 : 1;
         }
 
         private static void Run(string name, Action test)
@@ -287,6 +292,36 @@ namespace TextTokenizationLab
             Check(output.Contains("Hello!") &&
                   output.Contains("How are you?"),
                   "Не все предложения выведены.");
+        }
+        private static void TestEmptyText()
+        {
+            Check(TextParser.Parse("   ").Sentences.Count == 0,
+                "Пустая строка должна дать ноль предложений.");
+        }
+
+        private static void TestMultiplePunctuation()
+        {
+            Text text = TextParser.Parse("Привет... Как дела?!");
+            Check(text.Sentences.Count == 2, "Ожидалось два предложения.");
+            Check(text.Sentences[1].ToString() == "Как дела?!",
+                "Потеряна пунктуация.");
+        }
+
+        private static void TestBadIndex()
+        {
+            bool exception = false;
+            try { TextParser.Parse("Hello.").ReplaceWordsInSentence(5, 3, "OK"); }
+            catch (ArgumentOutOfRangeException) { exception = true; }
+            Check(exception, "Ожидалась ошибка индекса.");
+        }
+
+        private static void TestCaseInsensitiveStopWords()
+        {
+            Text text = TextParser.Parse("THE cat Is here.");
+            text.RemoveStopWords(new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                { "the", "is" });
+            Check(text.Sentences[0].ToString() == "cat here.",
+                "Стоп-слова должны удаляться без учёта регистра.");
         }
     }
 }
