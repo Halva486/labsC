@@ -1,0 +1,5 @@
+bin/
+obj/
+.vs/
+*.user
+exported_text.xml
