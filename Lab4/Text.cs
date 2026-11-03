@@ -1,32 +1,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace TextTokenizationLab
 {
     public class Text
     {
+        public List<Sentence> Sentences { get; set; } = new List<Sentence>();
         public List<string> OriginalLines { get; set; } = new List<string>();
+
         public Dictionary<string, (int Count, SortedSet<int> Lines)> BuildConcordance()
         {
-            var result = new Dictionary<string, (int Count, SortedSet<int> Lines)>();
+            var concordance = new Dictionary<string, (int Count, SortedSet<int> Lines)>();
+
             for (int i = 0; i < OriginalLines.Count; i++)
             {
-                foreach (string word in OriginalLines[i].Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                string line = OriginalLines[i];
+                var matches = System.Text.RegularExpressions.Regex.Matches(
+                    line, AppConstants.TokenRegex);
+
+                foreach (System.Text.RegularExpressions.Match match in matches)
                 {
-                    if (!result.ContainsKey(word)) result[word] = (0, new SortedSet<int>());
-                    var item = result[word];
-                    item.Count++;
-                    item.Lines.Add(i + 1);
-                    result[word] = item;
+                    if (!match.Groups[1].Success) continue;
+
+                    string word = match.Value.ToLowerInvariant();
+
+                    if (!concordance.ContainsKey(word))
+                        concordance[word] = (0, new SortedSet<int>());
+
+                    var info = concordance[word];
+                    info.Count++;
+                    info.Lines.Add(i + 1);
+                    concordance[word] = info;
                 }
             }
-            return result;
+            return concordance;
         }
+
         public void PrintConcordance()
         {
+            Console.WriteLine("\n--- PROJECT 04: CONCORDANCE ---");
             var concordance = BuildConcordance();
             foreach (var item in concordance.OrderBy(x => x.Key))
-                Console.WriteLine($"{item.Key}: {item.Value.Count} ({string.Join(", ", item.Value.Lines)})");
+            {
+                string lines = string.Join(" ", item.Value.Lines);
+                Console.WriteLine($"{item.Key.PadRight(20, '.')} {item.Value.Count}: {lines}");
+            }
         }
     }
 }
