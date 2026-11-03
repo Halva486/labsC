@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 namespace TextTokenizationLab
 {
     public class Text
@@ -19,6 +21,12 @@ namespace TextTokenizationLab
                 }
             }
             return result;
+        }
+        public void PrintConcordance()
+        {
+            var concordance = BuildConcordance();
+            foreach (var item in concordance.OrderBy(x => x.Key))
+                Console.WriteLine($"{item.Key}: {item.Value.Count} ({string.Join(", ", item.Value.Lines)})");
         }
     }
 }
