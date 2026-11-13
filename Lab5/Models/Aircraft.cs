@@ -3,7 +3,7 @@ namespace lab5.Models;
 /// <summary>
 /// Базовый абстрактный класс воздушного судна.
 /// </summary>
-public abstract class Aircraft
+public abstract class Aircraft : IComparable<Aircraft>
 {
     public string Model { get; }
     public double FlightRange { get; }
@@ -42,5 +42,15 @@ public abstract class Aircraft
         Console.WriteLine(
             $"{Model}: дальность — {FlightRange} км, расход топлива — {FuelConsumption} л/ч, " +
             $"пассажиры — {GetPassengerCapacity()}, груз — {GetCargoCapacity()} т");
+    }
+
+    public int CompareTo(Aircraft? other)
+    {
+        if (other is null)
+        {
+            return 1;
+        }
+
+        return FlightRange.CompareTo(other.FlightRange);
     }
 }
