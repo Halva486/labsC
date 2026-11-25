@@ -10,6 +10,15 @@ namespace NewYearGiftApp
 
         protected Sweet(string name, double weight, double sugarContent)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Название сладости не может быть пустым.", nameof(name));
+
+            if (double.IsNaN(weight) || double.IsInfinity(weight) || weight <= 0)
+                throw new ArgumentOutOfRangeException(nameof(weight), "Вес должен быть положительным числом.");
+
+            if (double.IsNaN(sugarContent) || double.IsInfinity(sugarContent) || sugarContent < 0 || sugarContent > 100)
+                throw new ArgumentOutOfRangeException(nameof(sugarContent), "Содержание сахара должно быть от 0 до 100%.");
+
             Name = name;
             Weight = weight;
             SugarContent = sugarContent;
