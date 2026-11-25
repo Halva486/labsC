@@ -26,6 +26,12 @@ namespace NewYearGiftApp
             Sweets.Sort();
         }
 
+        public void SortBySugarContent()
+        {
+            Sweets.Sort((first, second) =>
+                first.SugarContent.CompareTo(second.SugarContent));
+        }
+
         public List<Sweet> FindBySugarRange(double minSugar, double maxSugar)
         {
             if (minSugar > maxSugar)
