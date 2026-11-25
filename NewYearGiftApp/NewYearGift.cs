@@ -21,6 +21,11 @@ namespace NewYearGiftApp
             return Sweets.Sum(s => s.Weight);
         }
 
+        public string GetGiftInfo()
+        {
+            return $"В подарке {Sweets.Count} конфет(ы). Общий вес: {GetTotalWeight():0.##} г.";
+        }
+
         public void SortByWeight()
         {
             Sweets.Sort();
